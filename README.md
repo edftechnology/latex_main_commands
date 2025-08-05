@@ -7,7 +7,6 @@ Neste documento estão contidos os principais comandos e configurações para co
 ## _Abstract_
 
 _This document contains the main commands and settings for configuring/installing/use `LaTeX main commands` on `Linux Ubuntu`._ 
-
 ### Construído com
 
 Esta seção deve listar todas as principais estruturas/bibliotecas usadas para inicializar seu projeto, bem como a sequência de instalação. Deixe quaisquer complementos/plugins para a seção de agradecimentos. Aqui estão alguns exemplos.
@@ -22,7 +21,6 @@ Esta seção deve listar todas as principais estruturas/bibliotecas usadas para 
 
 <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
 
-
 ## Descrição [2]
 
 ### ``TeXstudio``
@@ -30,13 +28,11 @@ Esta seção deve listar todas as principais estruturas/bibliotecas usadas para 
 O `TeXstudio` é um ambiente integrado de desenvolvimento (IDE) gratuito e de código aberto projetado especificamente para facilitar a criação e edição de documentos `LaTeX`, um sistema de composição tipográfica amplamente utilizado para produzir documentos científicos, acadêmicos e técnicos de alta qualidade. Com recursos como realce de sintaxe, correção automática, assistência de código e visualização em tempo real, o `TeXstudio` torna o processo de escrita e formatação de documentos `LaTeX` mais eficiente e acessível. Ele oferece uma interface amigável para a configuração de projetos, gerenciamento de bibliotecas de referências, bem como integração com o `TeX Live` e outras distribuições `LaTeX`, tornando-o uma escolha popular entre autores e pesquisadores que buscam uma ferramenta poderosa e conveniente para produzir documentos técnico-científicos de alta qualidade.
 
 
-
 ## 1. Configurar/Instalar/Usar o `principais comandos do LaTeX` no `Linux Ubuntu` [1]
 
 Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`, você pode seguir os seguintes passos:
 
 1. Abra o `Terminal Emulator`. Você pode fazer isso pressionando: `Ctrl + Alt + T`
-
 
 2. Certifique-se de que seu sistema esteja limpo e atualizado.
 
@@ -87,7 +83,6 @@ Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`
     ```bash
     sudo apt full-upgrade -y
     ```
-
 ## 1.1 Código completo para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu` 
 
 Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu` sem precisar digitar linha por linha, você pode seguir estas etapas:
@@ -109,7 +104,6 @@ Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`
     texstudio
     texstudio --version
     ```
-
 ## 1. Gerar a Lista de Nomenclaturas (variáveis)
 
 Para que a sua lista de nomenclaturas seja efetivamente gerada e apareça no `main_<nome_do_projeto>.pdf` você precisa:
@@ -157,7 +151,6 @@ latexmk -C
     ```
 
 Pronto — agora, repetindo o passo de `makeindex`, a sua lista deve aparecer em `main_<nome_do_projeto>.pdf`.
-
 ## 2. Gerar o Índice Remissivo (Index)
 
 Para que o índice remissivo (lista de palavras-chave com referência às páginas, como em livros técnicos) apareça corretamente no arquivo `main_<nome_do_projeto>.pdf`, siga os passos abaixo:
@@ -216,7 +209,6 @@ latexmk -C
 Pronto! Agora, o índice remissivo será gerado e aparecerá corretamente no final do seu `main_<nome_do_projeto>.pdf`.
 
 > **Obs.**: Para garantir que o índice apareça no sumário, é importante usar `\addcontentsline` como mostrado acima. Se estiver usando a classe `book` ou `abntex2`, o comando pode ser adaptado para `\chapter*{Índice Remissivo}` ou `\section*{Índice Remissivo}`, conforme a estrutura do documento.
-
 ## 3. Como compilar
 
 1. **Limpe os arquivos auxiliares (opcional mas recomendado)**:
@@ -244,6 +236,54 @@ pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
 
 Isso garantirá que comandos como `\cite{Linnaeus1758}` produzam a
 referência adequada no PDF final.
+### Comando 1
+
+```bash
+pdflatex -synctex=1 -interaction=nonstopmode main_thesis.tex
+```
+
+- `-synctex=1`: Gera um arquivo `.synctex.gz` que permite a sincronização entre o código-fonte `.tex` e o PDF, útil em editores como TeXstudio, TeXworks, VS Code etc.
+- `-interaction=nonstopmode`: O LaTeX não para em erros; ele tenta compilar até o fim, ignorando erros (útil para testes rápidos).
+- `"main_thesis".tex`: Como explicado antes, está incorreto — as aspas estão no lugar errado. O correto seria `main_thesis.tex`.
+
+### Comando 2
+
+```bash
+pdflatex -interaction=batchmode main_thesis.tex
+```
+
+- `-interaction=batchmode`: Mais silencioso ainda que `nonstopmode`. Não exibe quase nada no terminal, nem prompts de erro. Útil para compilações automatizadas (CI/CD, scripts etc.).
+- Não gera `.synctex.gz`, o que pode ser um problema se você usa recursos de sincronização.
+
+### Resumo da diferença
+
+| Opção | nonstopmode | batchmode |
+|-------|-------------|-----------|
+| Exibe erros? | Sim, mas não para a compilação | Não — totalmente silencioso |
+| Gera PDF? | Sim, mesmo com erros | Sim, mas pode gerar resultado corrompido |
+| Interativo? | Não interativo | Também não interativo |
+| Usado em? | Desenvolvimento local | Scripts automáticos, CI/CD |
+| `-synctex`? | Compatível com sincronização de editores | — |
+
+### Solução 1: Compilar o primeiro arquivo que bate com `main*.tex`
+
+```bash
+pdflatex -synctex=1 -interaction=batchmode $(ls main*.tex | head -n 1)
+```
+
+Esse comando:
+- Encontra o primeiro arquivo com `main*.tex`.
+- Usa ele como entrada para o `pdflatex`.
+
+### Solução 2: Compilar todos os arquivos que casam com o padrão
+
+```bash
+for file in main*.tex; do
+  pdflatex -synctex=1 -interaction=batchmode "$file"
+done
+```
+
+Isso compila todos os arquivos `main*.tex` um por um.
 
 ## Referências
 

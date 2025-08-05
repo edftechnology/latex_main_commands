@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Como instalar/configurar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`
 # 
 # ## Resumo
@@ -24,7 +21,6 @@
 # * [![MathPix](https://img.shields.io/badge/MathPix-008080?style=flat-square&logo=MathPix&logoColor=white)](https://mathpix.com/)
 # 
 # <p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
-# 
 
 # ## Descrição [2]
 # 
@@ -32,14 +28,12 @@
 # 
 # O `TeXstudio` é um ambiente integrado de desenvolvimento (IDE) gratuito e de código aberto projetado especificamente para facilitar a criação e edição de documentos `LaTeX`, um sistema de composição tipográfica amplamente utilizado para produzir documentos científicos, acadêmicos e técnicos de alta qualidade. Com recursos como realce de sintaxe, correção automática, assistência de código e visualização em tempo real, o `TeXstudio` torna o processo de escrita e formatação de documentos `LaTeX` mais eficiente e acessível. Ele oferece uma interface amigável para a configuração de projetos, gerenciamento de bibliotecas de referências, bem como integração com o `TeX Live` e outras distribuições `LaTeX`, tornando-o uma escolha popular entre autores e pesquisadores que buscam uma ferramenta poderosa e conveniente para produzir documentos técnico-científicos de alta qualidade.
 # 
-# 
 
 # ## 1. Configurar/Instalar/Usar o `principais comandos do LaTeX` no `Linux Ubuntu` [1]
 # 
 # Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`, você pode seguir os seguintes passos:
 # 
 # 1. Abra o `Terminal Emulator`. Você pode fazer isso pressionando: `Ctrl + Alt + T`
-# 
 
 # 2. Certifique-se de que seu sistema esteja limpo e atualizado.
 # 
@@ -248,6 +242,55 @@
 # Isso garantirá que comandos como `\cite{Linnaeus1758}` produzam a
 # referência adequada no PDF final.
 
+# ### Comando 1
+# 
+# ```bash
+# pdflatex -synctex=1 -interaction=nonstopmode main_thesis.tex
+# ```
+# 
+# - `-synctex=1`: Gera um arquivo `.synctex.gz` que permite a sincronização entre o código-fonte `.tex` e o PDF, útil em editores como TeXstudio, TeXworks, VS Code etc.
+# - `-interaction=nonstopmode`: O LaTeX não para em erros; ele tenta compilar até o fim, ignorando erros (útil para testes rápidos).
+# - `"main_thesis".tex`: Como explicado antes, está incorreto — as aspas estão no lugar errado. O correto seria `main_thesis.tex`.
+
+# ### Comando 2
+# 
+# ```bash
+# pdflatex -interaction=batchmode main_thesis.tex
+# ```
+# 
+# - `-interaction=batchmode`: Mais silencioso ainda que `nonstopmode`. Não exibe quase nada no terminal, nem prompts de erro. Útil para compilações automatizadas (CI/CD, scripts etc.).
+# - Não gera `.synctex.gz`, o que pode ser um problema se você usa recursos de sincronização.
+
+# ### Resumo da diferença
+# 
+# | Opção | nonstopmode | batchmode |
+# |-------|-------------|-----------|
+# | Exibe erros? | Sim, mas não para a compilação | Não — totalmente silencioso |
+# | Gera PDF? | Sim, mesmo com erros | Sim, mas pode gerar resultado corrompido |
+# | Interativo? | Não interativo | Também não interativo |
+# | Usado em? | Desenvolvimento local | Scripts automáticos, CI/CD |
+# | `-synctex`? | Compatível com sincronização de editores | — |
+
+# ### Solução 1: Compilar o primeiro arquivo que bate com `main*.tex`
+# 
+# ```bash
+# pdflatex -synctex=1 -interaction=batchmode $(ls main*.tex | head -n 1)
+# ```
+# 
+# Esse comando:
+# - Encontra o primeiro arquivo com `main*.tex`.
+# - Usa ele como entrada para o `pdflatex`.
+
+# ### Solução 2: Compilar todos os arquivos que casam com o padrão
+# 
+# ```bash
+# for file in main*.tex; do
+#   pdflatex -synctex=1 -interaction=batchmode "$file"
+# done
+# ```
+# 
+# Isso compila todos os arquivos `main*.tex` um por um.
+
 # ## Referências
 # 
 # [1] OPENAI. ***Ativar autosave no `texstudio`.*** Disponível em: <https://chat.openai.com/c/210ca6d2-7da5-4830-890a-b8e1cb0ee7ee> (texto adaptado). ChatGPT. Acessado em: 27/11/2023 10:44.
@@ -255,4 +298,4 @@
 # [2] OPENAI. ***Vs code: editor popular.*** Disponível em: <https://chat.openai.com/c/b640a25d-f8e3-4922-8a3b-ed74a2657e42> (texto adaptado). ChatGPT. Acessado em: 14/11/2023 18:56.
 # 
 # [3] USER: CHANDRA HAS. ***Texstudio auto-compilation/live preview feature (latex tips)/solution-51.*** Disponível em: <https://www.youtube.com/watch?v=hO1LmNtKg1w> (texto adaptado). YouTube. Acessado em: 18/01/2024 08:46.
-# 
+
