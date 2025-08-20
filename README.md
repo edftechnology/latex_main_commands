@@ -31,85 +31,6 @@ O `TeXstudio` é um ambiente integrado de desenvolvimento (IDE) gratuito e de c�
 
 
 
-## 1. Configurar/Instalar/Usar o `principais comandos do LaTeX` no `Linux Ubuntu` [1]
-
-Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu`, você pode seguir os seguintes passos:
-
-1. Abra o `Terminal Emulator`. Você pode fazer isso pressionando: `Ctrl + Alt + T`
-
-
-2. Certifique-se de que seu sistema esteja limpo e atualizado.
-
-    2.1 Limpar o `cache` do gerenciador de pacotes `apt`. Especificamente, ele remove todos os arquivos de pacotes (`.deb`) baixados pelo `apt` e armazenados em `/var/cache/apt/archives/`. Digite o seguinte comando:
-    
-    ```bash
-    sudo apt clean
-    ``` 
-    
-    2.2 Remover pacotes `.deb` antigos ou duplicados do cache local. É útil para liberar espaço, pois remove apenas os pacotes que não podem mais ser baixados (ou seja, versões antigas de pacotes que foram atualizados). Digite o seguinte comando:
-    
-    ```bash
-    sudo apt autoclean
-    ```
-
-    2.3 Remover pacotes que foram automaticamente instalados para satisfazer as dependências de outros pacotes e que não são mais necessários. Digite o seguinte comando:
-    
-    ```bash
-    sudo apt autoremove -y
-    ```
-
-    2.4 Buscar as atualizações disponíveis para os pacotes que estão instalados em seu sistema. Digite o seguinte comando e pressione `Enter`: 
-    
-    ```bash
-    sudo apt update
-    ```
-
-    2.5 **Corrigir pacotes quebrados**: Isso atualizará a lista de pacotes disponíveis e tentará corrigir pacotes quebrados ou com dependências ausentes:
-    
-    ```bash
-    sudo apt --fix-broken install
-    ```
-
-    2.6 Limpar o `cache` do gerenciador de pacotes `apt`. Especificamente, ele remove todos os arquivos de pacotes (`.deb`) baixados pelo `apt` e armazenados em `/var/cache/apt/archives/`. Digite o seguinte comando:
-    
-    ```bash
-    sudo apt clean
-    ``` 
-    
-    2.7 Para ver a lista de pacotes a serem atualizados, digite o seguinte comando e pressione `Enter`:  
-    
-    ```bash
-    sudo apt list --upgradable
-    ```
-
-    2.8 Realmente atualizar os pacotes instalados para as suas versões mais recentes, com base na última vez que você executou `sudo apt update`. Digite o seguinte comando e pressione `Enter`:
-    
-    ```bash
-    sudo apt full-upgrade -y
-    ```
-
-## 1.1 Código completo para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu` 
-
-Para configurar/instalar/usar o `principais comandos do LaTeX` no `Linux Ubuntu` sem precisar digitar linha por linha, você pode seguir estas etapas:
-
-1. Abra o `Terminal Emulator`. Você pode fazer isso pressionando: `Ctrl + Alt + T`
-
-2. Digite o seguinte comando e pressione `Enter`:
-
-    ```bash
-    sudo apt clean
-    sudo apt autoclean
-    sudo apt autoremove -y
-    sudo apt update
-    sudo apt --fix-broken install
-    sudo apt clean
-    sudo apt list --upgradable
-    sudo apt full-upgrade -y
-    sudo apt install texstudio -y
-    texstudio
-    texstudio --version
-    ```
-
 ## 1. Gerar a Lista de Nomenclaturas (variáveis)
 
 Para que a sua lista de nomenclaturas seja efetivamente gerada e apareça no `main_<nome_do_projeto>.pdf` você precisa:
@@ -301,6 +222,68 @@ done
 
 Isso compila todos os arquivos `main*.tex` um por um.
 
+
+## 4. Limpar arquivos auxiliares
+
+### 4.1 Limpar arquivos auxiliares de um `.tex` específico
+
+1. O `latexmk` é um _wrapper_ para o LaTeX e tem a opção -c para limpar auxiliares:
+
+```bash
+latexmk -c main.tex
+```
+
+Isso apaga `.aux`, `.log`, `.toc`,`etc.`, mas mantém o `.pdf`.
+
+
+
+### 4.2 Limpar arquivos auxiliares, inclusive o `.pdf`, de um `.tex` específico
+
+1. Se quiser limpar tudo, incluindo o PDF:
+
+```bash
+latexmk -C main.tex
+```
+
+
+### 4.3 Limpar todos os arquivos auxiliares de todos os arquivos `.tex`
+
+1. Para limpar todos os arquivos auxiliares de todos os arquivos `.tex`, execute:
+
+```bash
+latexmk -C
+```
+
+    ele remove todos os arquivos auxiliares gerados pelo processo de compilação (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk` etc.), mas mantém o PDF final.
+
+
+
+### 4.4 
+
+Se quiser remover também o PDF e saídas finais (além dos auxiliares), aí você usaria:
+
+```bash
+latexmk -CA
+```
+
+- `C`: limpa só os auxiliares.
+
+- `CA`: limpa tudo (incluindo PDF, PS, DVI).
+
+# 4.5 Resumo de como limpar arquivos auxiliares
+
+| Comando | O que faz |
+|---------|-----------|
+| `latexmk -c main.tex` | Remove apenas os arquivos auxiliares (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk`, etc.), **mantém o PDF**. |
+| `latexmk -C main.tex` | Remove **todos os arquivos auxiliares** (mesmos do `-c`) e **mantém o PDF**. |
+| `latexmk -C` | Mesmo efeito do anterior, mas aplicado ao projeto inteiro (sem especificar o `.tex`). |
+| `latexmk -CA main.tex` | Remove **todos os auxiliares** **e também** o PDF, PS e DVI. |
+| `latexmk -CA` | Idem acima, mas aplicado ao projeto inteiro. |
+
+**Resumo rápido**  
+- `-c` → limpa auxiliares.  
+- `-C` → limpa auxiliares (mais agressivo) mas mantém o PDF.  
+- `-CA` → limpa tudo, inclusive o PDF.  
 
 ## Referências
 
