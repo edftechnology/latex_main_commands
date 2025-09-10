@@ -129,7 +129,9 @@ latexmk -C
 
   ```bash
   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
+  bibtex main_<nome_do_projeto>.tex
   makeindex main_<nome_do_projeto>.idx
+  makeindex main_<nome_do_projeto>.nlo -s nomencl.ist -o main_<nome_do_projeto>.nls
   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
   ```
@@ -158,7 +160,9 @@ Se desejar chamar cada etapa manualmente, use a sequência abaixo:
 
 ```bash
 pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-bibtex main_<nome_do_projeto>
+bibtex main_<nome_do_projeto>.tex
+makeindex main_<nome_do_projeto>.idx
+makeindex main_<nome_do_projeto>.nlo -s nomencl.ist -o main_<nome_do_projeto>.nls
 pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
 pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
 ```
@@ -173,7 +177,9 @@ pdflatex -synctex=1 -interaction=nonstopmode main_thesis.tex
 ```
 
 - `-synctex=1`: Gera um arquivo `.synctex.gz` que permite a sincronização entre o código-fonte `.tex` e o PDF, útil em editores como TeXstudio, TeXworks, VS Code etc.
+
 - `-interaction=nonstopmode`: O LaTeX não para em erros; ele tenta compilar até o fim, ignorando erros (útil para testes rápidos).
+
 - `"main_thesis".tex`: Como explicado antes, está incorreto — as aspas estão no lugar errado. O correto seria `main_thesis.tex`.
 
 
@@ -254,11 +260,11 @@ latexmk -C main.tex
 latexmk -C
 ```
 
-    ele remove todos os arquivos auxiliares gerados pelo processo de compilação (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk` etc.), mas mantém o PDF final.
+Ele remove todos os arquivos auxiliares gerados pelo processo de compilação (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk` etc.), mas mantém o PDF final.
 
 
 
-### 4.4 
+### 4.4 Remover também o PDF e saídas finais
 
 Se quiser remover também o PDF e saídas finais (além dos auxiliares), aí você usaria:
 
@@ -274,16 +280,45 @@ latexmk -CA
 
 | Comando | O que faz |
 |---------|-----------|
-| `latexmk -c main.tex` | Remove apenas os arquivos auxiliares (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk`, etc.), **mantém o PDF**. |
+| `latexmk -c main.tex` | Remove apenas os arquivos auxiliares (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk`, etc.), 
+
+**mantém o PDF**. |
+
 | `latexmk -C main.tex` | Remove **todos os arquivos auxiliares** (mesmos do `-c`) e **mantém o PDF**. |
 | `latexmk -C` | Mesmo efeito do anterior, mas aplicado ao projeto inteiro (sem especificar o `.tex`). |
 | `latexmk -CA main.tex` | Remove **todos os auxiliares** **e também** o PDF, PS e DVI. |
 | `latexmk -CA` | Idem acima, mas aplicado ao projeto inteiro. |
 
-**Resumo rápido**  
-- `-c` → limpa auxiliares.  
-- `-C` → limpa auxiliares (mais agressivo) mas mantém o PDF.  
+**Resumo rápido**
+
+- `-c` → limpa auxiliares.
+
+- `-C` → limpa auxiliares (mais agressivo) mas mantém o PDF.
+
 - `-CA` → limpa tudo, inclusive o PDF.  
+
+# 5. Resumo
+
+* `pdflatex -interaction=batchmode main_<nome_do_projeto>.tex` — compila o projeto.
+
+* `makeindex main_<nome_do_projeto>.nlo -s nomencl.ist -o main_<nome_do_projeto>.nls` — gera a lista de nomenclaturas.
+
+* `makeindex main_<nome_do_projeto>.idx` — processa o índice remissivo.
+
+* `pdflatex -synctex=1 -interaction=batchmode $(ls main*.tex | head -n 1)` — compila o primeiro `main*.tex`.
+
+* `for file in main*.tex; do pdflatex -synctex=1 -interaction=batchmode "$file"; done` — compila todos os arquivos `main*.tex`.
+
+* `latexmk -c main.tex` — remove arquivos auxiliares e mantém o PDF.
+
+* `latexmk -C main.tex` — remove todos os auxiliares e mantém o PDF.
+
+* `latexmk -C` — limpa o projeto inteiro.
+
+* `latexmk -CA main.tex` — remove auxiliares e o PDF.
+
+* `latexmk -CA` — limpa tudo em todo o projeto.
+
 
 ## Referências
 
