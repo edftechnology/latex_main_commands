@@ -55,9 +55,9 @@
 # 
 # 3. **Limpe os arquivos auxiliares (opcional mas recomendado)**:
 # 
-# ```bash
-# latexmk -C
-# ```
+#   ```bash
+#   latexmk -C
+#   ```
 # 
 # 4. **Compilar na ordem correta**: 
 # 
@@ -131,12 +131,13 @@
 # 5. **Compilar na ordem correta**: Compile o documento usando a seguinte sequência de comandos:
 # 
 #   ```bash
-#   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-#   bibtex main_<nome_do_projeto>.tex
-#   makeindex main_<nome_do_projeto>.idx
-#   makeindex main_<nome_do_projeto>.nlo -s nomencl.ist -o main_<nome_do_projeto>.nls
-#   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-#   pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
+#   MAINNOMEDOPROJETO="main"  # SEM o `.tex`
+#   pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+#   bibtex "$MAINNOMEDOPROJETO.tex"
+#   makeindex "$MAINNOMEDOPROJETO.idx"
+#   makeindex "$MAINNOMEDOPROJETO.nlo" -s nomencl.ist -o "$MAINNOMEDOPROJETO.nls"
+#   pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+#   pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO".tex"
 #   ```
 # 
 # Pronto! Agora, o índice remissivo será gerado e aparecerá corretamente no final do seu `main_<nome_do_projeto>.pdf`.
@@ -147,28 +148,33 @@
 # 
 # 1. **Limpe os arquivos auxiliares (opcional mas recomendado)**:
 # 
-# ```bash
-# latexmk -C
-# ```
+#     ```bash
+#     latexmk -C
+#     ```
 # 
 # 2. Para que as citações apareçam corretamente, o documento precisa ser
 # compilado executando o `BibTeX`. A maneira recomendada é utilizar o
 # `latexmk`, que automatiza todo o processo:
 # 
-# ```bash
-# latexmk -pdf -silent main_<nome_do_projeto>.tex
-# ```
+#     ```bash
+#     latexmk -pdf -silent main_<nome_do_projeto>.tex
+#     ```
 # 
-# Se desejar chamar cada etapa manualmente, use a sequência abaixo:
+#     Altere o nome de `<nome_do_projeto>`, deve ser substituido pelo nome do projeto.
 # 
-# ```bash
-# pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-# bibtex main_<nome_do_projeto>.tex
-# makeindex main_<nome_do_projeto>.idx
-# makeindex main_<nome_do_projeto>.nlo -s nomencl.ist -o main_<nome_do_projeto>.nls
-# pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-# pdflatex -interaction=batchmode main_<nome_do_projeto>.tex
-# ```
+#     Se desejar chamar cada etapa manualmente, use a sequência abaixo:
+# 
+#     ```bash
+#     MAINNOMEDOPROJETO="main"  # SEM o `.tex`
+#     pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+#     bibtex "$MAINNOMEDOPROJETO.tex"
+#     makeindex "$MAINNOMEDOPROJETO.idx"
+#     makeindex "$MAINNOMEDOPROJETO.nlo" -s nomencl.ist -o "$MAINNOMEDOPROJETO.nls"
+#     pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+#     pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO".tex"
+#     ```
+# 
+#     Altere o nome de `main`, deve ser substituido pelo nome do projeto.
 # 
 # Isso garantirá que comandos como `\cite{Linnaeus1758}` produzam a
 # referência adequada no PDF final.
@@ -223,11 +229,13 @@
 
 # #### 3.4.2 Compilar todos os arquivos que casam com o padrão
 # 
-# ```bash
-# for file in main*.tex; do
-#   pdflatex -synctex=1 -interaction=batchmode "$file"
-# done
-# ```
+# 1. Para compilar todos os arquivos que casam com o padrão, execute:
+# 
+#   ```bash
+#   for file in main*.tex; do
+#     pdflatex -synctex=1 -interaction=batchmode "$file"
+#   done
+#   ```
 # 
 # Isso compila todos os arquivos `main*.tex` um por um.
 # 
