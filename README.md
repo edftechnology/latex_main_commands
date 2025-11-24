@@ -37,24 +37,24 @@ Para que a sua lista de nomenclaturas seja efetivamente gerada e apareça no `ma
 
 1. **Carregar o pacote e declarar a nomenclatura**: No preâmbulo do seu `main_<nome_do_projeto>.tex` inclua algo como:
 
-  ```latex
-  % no preâmbulo do main.tex
-  \usepackage[intoc]{nomencl}   % intoc = adiciona ao sumário
-  \makenomenclature            % gera a lista
-  ```
-  Se você já usa `\input{preamble.tex}`, coloque essas duas linhas lá.
+    ```latex
+    % no preâmbulo do main.tex
+    \usepackage[intoc]{nomencl}   % intoc = adiciona ao sumário
+    \makenomenclature            % gera a lista
+    ```
+    Se você já usa `\input{preamble.tex}`, coloque essas duas linhas lá.
 
 2. **Inserir o comando de impressão**: No ponto onde você quer que apareça a lista (normalmente logo após o sumário), coloque:
 
-  ```latex
-  \printnomenclature
-  ```
+    ```latex
+    \printnomenclature
+    ```
 
 3. **Limpe os arquivos auxiliares (opcional mas recomendado)**:
 
-  ```bash
-  latexmk -C
-  ```
+    ```bash
+    latexmk -C
+    ```
 
 4. **Compilar na ordem correta**: 
 
@@ -85,59 +85,59 @@ Para que o índice remissivo (lista de palavras-chave com referência às págin
 
 1. **Carregar o pacote e ativar o índice**: No preâmbulo do seu `main_<nome_do_projeto>.tex` (ou no `preamble.tex`), inclua as seguintes linhas:
 
-  ```latex
-  \usepackage{makeidx}  % habilita suporte ao índice
-  \makeindex            % ativa a criação do arquivo .idx
-  ```
+    ```latex
+    \usepackage{makeidx}  % habilita suporte ao índice
+    \makeindex            % ativa a criação do arquivo .idx
+    ```
 
 2. **Inserir entradas para o índice**: No corpo do seu texto, marque as palavras ou termos que devem aparecer no índice com o comando:
 
-  ```latex
-  \index{palavra-chave}
-  ```
+    ```latex
+    \index{palavra-chave}
+    ```
 
-  Exemplos:
+    Exemplos:
 
-  ```latex
-  O número de Mach\index{número de Mach} é fundamental no escoamento compressível.
-  O programa RPA\index{RPA} é utilizado para análise de motores foguetes.
-  ```
-  
-  Você também pode usar índices hierárquicos, do tipo:
+    ```latex
+    O número de Mach\index{número de Mach} é fundamental no escoamento compressível.
+    O programa RPA\index{RPA} é utilizado para análise de motores foguetes.
+    ```
+    
+    Você também pode usar índices hierárquicos, do tipo:
 
-  ```latex
-  \index{combustão!pré-misturada}
-  \index{combustão!estequiométrica}
-  ```
+    ```latex
+    \index{combustão!pré-misturada}
+    \index{combustão!estequiométrica}
+    ```
 
 3. **Inserir o índice no documento**: No ponto onde você deseja que o índice seja impresso (normalmente ao final do documento), adicione:
 
-  ```latex
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{section}{Índice Remissivo}
-  \printindex
-  ```
+    ```latex
+    \cleardoublepage
+    \phantomsection
+    \addcontentsline{toc}{section}{Índice Remissivo}
+    \printindex
+    ```
 
 4. **Limpe os arquivos auxiliares (opcional mas recomendado)**:
 
-```bash
-latexmk -C
-```
+    ```bash
+    latexmk -C
+    ```
 
 5. **Compilar na ordem correta**: Compile o documento usando a seguinte sequência de comandos:
 
-  ```bash
-  MAINNOMEDOPROJETO="main"  # SEM o `.tex`
-  pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
-  bibtex "$MAINNOMEDOPROJETO.tex"
-  makeindex "$MAINNOMEDOPROJETO.idx"
-  makeindex "$MAINNOMEDOPROJETO.nlo" -s nomencl.ist -o "$MAINNOMEDOPROJETO.nls"
-  pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
-  pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO".tex"
-  ```
+    ```bash
+    MAINNOMEDOPROJETO="main"  # SEM o `.tex`
+    pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+    bibtex "$MAINNOMEDOPROJETO.tex"
+    makeindex "$MAINNOMEDOPROJETO.idx"
+    makeindex "$MAINNOMEDOPROJETO.nlo" -s nomencl.ist -o "$MAINNOMEDOPROJETO.nls"
+    pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO.tex"
+    pdflatex -interaction=batchmode "$MAINNOMEDOPROJETO".tex"
+    ```
 
-Pronto! Agora, o índice remissivo será gerado e aparecerá corretamente no final do seu `main_<nome_do_projeto>.pdf`.
+    Pronto! Agora, o índice remissivo será gerado e aparecerá corretamente no final do seu `main_<nome_do_projeto>.pdf`.
 
 > **Obs.**: Para garantir que o índice apareça no sumário, é importante usar `\addcontentsline` como mostrado acima. Se estiver usando a classe `book` ou `abntex2`, o comando pode ser adaptado para `\chapter*{Índice Remissivo}` ou `\section*{Índice Remissivo}`, conforme a estrutura do documento.
 
@@ -220,7 +220,9 @@ pdflatex -synctex=1 -interaction=batchmode $(ls main*.tex | head -n 1)
 ```
 
 Esse comando:
+
 - Encontra o primeiro arquivo com `main*.tex`.
+
 - Usa ele como entrada para o `pdflatex`.
 
 
@@ -228,13 +230,13 @@ Esse comando:
 
 1. Para compilar todos os arquivos que casam com o padrão, execute:
 
-  ```bash
-  for file in main*.tex; do
-    pdflatex -synctex=1 -interaction=batchmode "$file"
-  done
-  ```
+    ```bash
+    for file in main*.tex; do
+      pdflatex -synctex=1 -interaction=batchmode "$file"
+    done
+    ```
 
-Isso compila todos os arquivos `main*.tex` um por um.
+    Isso compila todos os arquivos `main*.tex` um por um.
 
 
 ## 4. Limpar arquivos auxiliares
@@ -243,11 +245,11 @@ Isso compila todos os arquivos `main*.tex` um por um.
 
 1. O `latexmk` é um _wrapper_ para o LaTeX e tem a opção -c para limpar auxiliares:
 
-```bash
-latexmk -c main.tex
-```
+    ```bash
+    latexmk -c main.tex
+    ```
 
-Isso apaga `.aux`, `.log`, `.toc`,`etc.`, mas mantém o `.pdf`.
+    Isso apaga `.aux`, `.log`, `.toc`,`etc.`, mas mantém o `.pdf`.
 
 
 
@@ -255,20 +257,20 @@ Isso apaga `.aux`, `.log`, `.toc`,`etc.`, mas mantém o `.pdf`.
 
 1. Se quiser limpar tudo, incluindo o PDF:
 
-```bash
-latexmk -C main.tex
-```
+    ```bash
+    latexmk -C main.tex
+    ```
 
 
 ### 4.3 Limpar todos os arquivos auxiliares de todos os arquivos `.tex`
 
 1. Para limpar todos os arquivos auxiliares de todos os arquivos `.tex`, execute:
 
-```bash
-latexmk -C
-```
+    ```bash
+    latexmk -C
+    ```
 
-Ele remove todos os arquivos auxiliares gerados pelo processo de compilação (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk` etc.), mas mantém o PDF final.
+    Ele remove todos os arquivos auxiliares gerados pelo processo de compilação (`.aux`, `.log`, `.toc`, `.out`, `.bbl`, `.blg`, `.fls`, `.fdb_latexmk` etc.), mas mantém o PDF final.
 
 
 
